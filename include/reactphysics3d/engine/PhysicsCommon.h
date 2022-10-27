@@ -198,7 +198,7 @@ class PhysicsCommon {
 
         /// Create and return a height-field shape
         HeightFieldShape* createHeightFieldShape(int nbGridColumns, int nbGridRows, decimal minHeight, decimal maxHeight,
-                                                 const void* heightFieldData, HeightFieldShape::HeightDataType dataType,
+                                                 void* heightFieldData, HeightFieldShape::HeightDataType dataType,
                                                  int upAxis = 1, decimal integerHeightScale = 1.0f,
                                                   const Vector3& scaling = Vector3(1,1,1));
 

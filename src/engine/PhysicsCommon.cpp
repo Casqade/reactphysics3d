@@ -471,7 +471,7 @@ void PhysicsCommon::deleteConvexMeshShape(ConvexMeshShape* convexMeshShape) {
  * @return A pointer to the created height field shape
  */
 HeightFieldShape* PhysicsCommon::createHeightFieldShape(int nbGridColumns, int nbGridRows, decimal minHeight, decimal maxHeight,
-                                         const void* heightFieldData, HeightFieldShape::HeightDataType dataType,
+                                         void* heightFieldData, HeightFieldShape::HeightDataType dataType,
                                          int upAxis, decimal integerHeightScale, const Vector3& scaling) {
 
     HeightFieldShape* shape = new (mMemoryManager.allocate(MemoryManager::AllocationType::Pool, sizeof(HeightFieldShape))) HeightFieldShape(nbGridColumns, nbGridRows, minHeight, maxHeight,

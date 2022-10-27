@@ -86,7 +86,7 @@ class HeightFieldShape : public ConcaveShape {
         HeightDataType mHeightDataType;
 
         /// Array of data with all the height values of the height field
-        const void*	mHeightFieldData;
+        void* mHeightFieldData;
 
         /// Local AABB of the height field (without scaling)
         AABB mAABB;
@@ -98,7 +98,7 @@ class HeightFieldShape : public ConcaveShape {
 
         /// Constructor
         HeightFieldShape(int nbGridColumns, int nbGridRows, decimal minHeight, decimal maxHeight,
-                         const void* heightFieldData, HeightDataType dataType, MemoryAllocator& allocator,
+                         void* heightFieldData, HeightDataType dataType, MemoryAllocator& allocator,
                          HalfEdgeStructure& triangleHalfEdgeStructure, int upAxis = 1, decimal integerHeightScale = 1.0f,
                          const Vector3& scaling = Vector3(1,1,1));
 
@@ -140,9 +140,33 @@ class HeightFieldShape : public ConcaveShape {
         /// Return the number of rows in the height field
         int getNbRows() const;
 
+        /// Set the number of rows in the height field
+        void setNbRows(const int nbGridRows);
+
         /// Return the number of columns in the height field
         int getNbColumns() const;
-		
+
+        /// Set the number of columns in the height field
+        void setNbColumns(const int nbGridRows);
+
+        /// Return the minimum height value of the height field
+        decimal getMinHeight() const;
+
+        /// Set the minimum height value of the height field
+        void setMinHeight(const decimal minHeight);
+
+        /// Return the maximum height value of the height field
+        decimal getMaxHeight() const;
+
+        /// Set the maximum height value of the height field
+        void setMaxHeight(const decimal maxHeight);
+
+        /// Set the height range of the height field
+        void setMinMaxHeight(const decimal minHeight, const decimal maxHeight);
+
+        /// Set the height field data
+        void setHeightFieldData(void* heightFieldData);
+
         /// Return the vertex (local-coordinates) of the height field at a given (x,y) position
         Vector3 getVertexAt(int x, int y) const;
 
@@ -151,6 +175,9 @@ class HeightFieldShape : public ConcaveShape {
 
         /// Return the type of height value in the height field
         HeightDataType getHeightDataType() const;
+
+        /// Compute the local AABB of the height field
+        void computeLocalAABB();
 
         /// Return the local bounds of the shape in x, y and z directions.
         virtual void getLocalBounds(Vector3& min, Vector3& max) const override;
@@ -175,9 +202,73 @@ RP3D_FORCE_INLINE int HeightFieldShape::getNbRows() const {
     return mNbRows;
 }
 
+// Set the number of rows in the height field
+RP3D_FORCE_INLINE void HeightFieldShape::setNbRows(const int nbRows) {
+    assert(nbRows >= 2);
+
+    mNbRows = nbRows;
+    mLength = static_cast<decimal>(mNbRows - 1);
+
+    computeLocalAABB();
+    notifyColliderAboutChangedSize();
+}
+
 // Return the number of columns in the height field
 RP3D_FORCE_INLINE int HeightFieldShape::getNbColumns() const {
     return mNbColumns;
+}
+
+// Set the number of columns in the height field
+RP3D_FORCE_INLINE void HeightFieldShape::setNbColumns(const int nbColumns) {
+    assert(nbColumns >= 2);
+
+    mNbColumns = nbColumns;
+    mWidth = static_cast<decimal>(mNbColumns - 1);
+
+    notifyColliderAboutChangedSize();
+}
+
+/// Return the minimum height value of the height field
+RP3D_FORCE_INLINE decimal HeightFieldShape::getMinHeight() const {
+    return mMinHeight;
+}
+
+/// Set the minimum height value of the height field
+RP3D_FORCE_INLINE void HeightFieldShape::setMinHeight(const decimal minHeight) {
+    assert(minHeight <= mMaxHeight);
+    mMinHeight = minHeight;
+
+    notifyColliderAboutChangedSize();
+}
+
+/// Return the maximum height value of the height field
+RP3D_FORCE_INLINE decimal HeightFieldShape::getMaxHeight() const {
+    return mMaxHeight;
+}
+
+/// Set the maximum height value of the height field
+RP3D_FORCE_INLINE void HeightFieldShape::setMaxHeight(const decimal maxHeight) {
+    assert(mMinHeight <= maxHeight);
+    mMaxHeight = maxHeight;
+
+    notifyColliderAboutChangedSize();
+}
+
+/// Set the height range of the height field
+RP3D_FORCE_INLINE void HeightFieldShape::setMinMaxHeight(const decimal minHeight, const decimal maxHeight) {
+    assert(minHeight <= maxHeight);
+    mMinHeight = minHeight;
+    mMaxHeight = maxHeight;
+
+    notifyColliderAboutChangedSize();
+}
+
+/// Set the height field data
+RP3D_FORCE_INLINE void HeightFieldShape::setHeightFieldData(void* heightFieldData) {
+    assert(heightFieldData != nullptr);
+    mHeightFieldData = heightFieldData;
+
+    notifyColliderAboutChangedSize();
 }
 
 // Return the type of height value in the height field

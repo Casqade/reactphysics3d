@@ -43,7 +43,7 @@ using namespace reactphysics3d;
  * @param integerHeightScale Scaling factor used to scale the height values (only when height values type is integer)
  */
 HeightFieldShape::HeightFieldShape(int nbGridColumns, int nbGridRows, decimal minHeight, decimal maxHeight,
-                                   const void* heightFieldData, HeightDataType dataType, MemoryAllocator& allocator,
+                                   void* heightFieldData, HeightDataType dataType, MemoryAllocator& allocator,
                                    HalfEdgeStructure& triangleHalfEdgeStructure, int upAxis,
                                    decimal integerHeightScale, const Vector3& scaling)
                  : ConcaveShape(CollisionShapeName::HEIGHTFIELD, allocator, scaling), mNbColumns(nbGridColumns), mNbRows(nbGridRows),
@@ -60,10 +60,14 @@ HeightFieldShape::HeightFieldShape(int nbGridColumns, int nbGridRows, decimal mi
 
     mHeightFieldData = heightFieldData;
 
+    computeLocalAABB();
+}
+
+/// Compute the local AABB of the height field
+void HeightFieldShape::computeLocalAABB() {
     decimal halfHeight = (mMaxHeight - mMinHeight) * decimal(0.5);
     assert(halfHeight >= 0);
 
-    // Compute the local AABB of the height field
     if (mUpAxis == 0) {
         mAABB.setMin(Vector3(-halfHeight, -mWidth * decimal(0.5), -mLength * decimal(0.5)));
         mAABB.setMax(Vector3(halfHeight, mWidth * decimal(0.5), mLength* decimal(0.5)));
