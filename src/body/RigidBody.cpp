@@ -159,6 +159,8 @@ void RigidBody::applyLocalForceAtLocalPosition(const Vector3& force, const Vecto
  */
 void RigidBody::applyWorldForceAtLocalPosition(const Vector3& force, const Vector3& point) {
 
+    assert(force.isFinite());
+
     // If it is not a dynamic body, we do nothing
     if (mWorld.mRigidBodyComponents.getBodyType(mEntity) != BodyType::DYNAMIC) return;
 
@@ -209,6 +211,8 @@ void RigidBody::applyLocalForceAtWorldPosition(const Vector3& force, const Vecto
  * @param point The point where the force is applied (in world-space)
  */
 void RigidBody::applyWorldForceAtWorldPosition(const Vector3& force, const Vector3& point) {
+
+    assert(force.isFinite());
 
     // If it is not a dynamic body, we do nothing
     if (mWorld.mRigidBodyComponents.getBodyType(mEntity) != BodyType::DYNAMIC) return;
