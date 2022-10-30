@@ -142,11 +142,11 @@ class DebugRenderer : public EventListener {
 
 		// -------------------- Constants -------------------- //
 
-		/// Number of sectors used to draw a sphere or a capsule
-        static constexpr int NB_SECTORS_SPHERE = 18;
+        /// Default number of sectors used to draw a sphere or a capsule
+        static constexpr int DEFAULT_NB_SECTORS_SPHERE = 18;
 
-		/// Number of stacks used to draw a sphere or a capsule
-        static constexpr int NB_STACKS_SPHERE = 10;
+        /// Default number of stacks used to draw a sphere or a capsule
+        static constexpr int DEFAULT_NB_STACKS_SPHERE = 10;
 
         /// Default radius of the sphere displayed to represent contact points
         static constexpr decimal DEFAULT_CONTACT_POINT_SPHERE_RADIUS = decimal(0.1);
@@ -170,6 +170,12 @@ class DebugRenderer : public EventListener {
 
 		/// Map a debug item with the color used to display it
 		Map<DebugItem, uint32> mMapDebugItemWithColor;
+
+        /// Number of sectors used to draw a sphere or a capsule
+        int mNbSectorsSphere;
+
+        /// Number of stacks used to draw a sphere or a capsule
+        int mNbStacksSphere;
 
         /// Radius of the sphere displayed to represent contact points
         decimal mContactPointSphereRadius;
@@ -236,6 +242,18 @@ class DebugRenderer : public EventListener {
 
 		/// Set whether a debug info is displayed or not
 		void setIsDebugItemDisplayed(DebugItem item, bool isDisplayed);
+
+        /// Get the number of sectors used to draw a sphere or a capsule
+        int getNbSectorsSphere() const;
+
+        /// Set the number of sectors used to draw a sphere or a capsule
+        void setNbSectorsSphere(int nbSectors);
+
+        /// Get the number of stacks used to draw a sphere or a capsule
+        int getNbStacksSphere() const;
+
+        /// Set the number of stacks used to draw a sphere or a capsule
+        void setNbStacksSphere(int nbStacks);
 
         /// Get the contact point sphere radius
         decimal getContactPointSphereRadius() const;
@@ -328,6 +346,40 @@ RP3D_FORCE_INLINE void DebugRenderer::setIsDebugItemDisplayed(DebugItem item, bo
 	if (isDisplayed) {
 		mDisplayedDebugItems |= itemFlag;
 	}
+}
+
+// Get the number of sectors used to draw a sphere or a capsule
+/**
+ * @return The number of sectors used to draw a sphere or a capsule
+ */
+RP3D_FORCE_INLINE int DebugRenderer::getNbSectorsSphere() const {
+    return mNbSectorsSphere;
+}
+
+// Set the number of sectors used to draw a sphere or a capsule
+/**
+ * @param radius The number of sectors used to draw a sphere or a capsule
+ */
+RP3D_FORCE_INLINE void DebugRenderer::setNbSectorsSphere(int nbSectors) {
+    assert(nbSectors > 2);
+    mNbSectorsSphere = nbSectors;
+}
+
+// Get the number of stacks used to draw a sphere or a capsule
+/**
+ * @return The number of stacks used to draw a sphere or a capsule
+ */
+RP3D_FORCE_INLINE int DebugRenderer::getNbStacksSphere() const {
+    return mNbStacksSphere;
+}
+
+// Set the number of stacks used to draw a sphere or a capsule
+/**
+ * @param radius The number of stacks used to draw a sphere or a capsule
+ */
+RP3D_FORCE_INLINE void DebugRenderer::setNbStacksSphere(int nbStacks) {
+    assert(nbStacks > 1);
+    mNbStacksSphere = nbStacks;
 }
 
 // Get the contact point sphere radius

@@ -42,6 +42,7 @@ using namespace reactphysics3d;
 // Constructor
 DebugRenderer::DebugRenderer(MemoryAllocator& allocator)
               :mAllocator(allocator), mLines(allocator), mTriangles(allocator), mDisplayedDebugItems(0), mMapDebugItemWithColor(allocator),
+               mNbSectorsSphere(DEFAULT_NB_SECTORS_SPHERE), mNbStacksSphere(DEFAULT_NB_STACKS_SPHERE),
                mContactPointSphereRadius(DEFAULT_CONTACT_POINT_SPHERE_RADIUS), mContactNormalLength(DEFAULT_CONTACT_NORMAL_LENGTH) {
 
     mMapDebugItemWithColor.add(Pair<DebugItem, uint32>(DebugItem::COLLIDER_AABB, static_cast<uint32>(DebugColor::MAGENTA)));
@@ -121,36 +122,36 @@ void DebugRenderer::drawBox(const Transform& transform, const Vector3& halfExten
 /// Draw a sphere
 void DebugRenderer::drawSphere(const Vector3& position, decimal radius, uint32 color) {
 
-    Vector3 vertices[(NB_SECTORS_SPHERE + 1) * (NB_STACKS_SPHERE + 1) + (NB_SECTORS_SPHERE + 1)];
-	
+    Vector3 vertices[(mNbSectorsSphere + 1) * (mNbStacksSphere + 1) + (mNbSectorsSphere + 1)];
+
 	// Vertices
-    const decimal sectorStep = 2 * PI_RP3D / NB_SECTORS_SPHERE;
-    const decimal stackStep = PI_RP3D / NB_STACKS_SPHERE;
-	
-    for (uint32 i = 0; i <= NB_STACKS_SPHERE; i++) {
+    const decimal sectorStep = 2 * PI_RP3D / mNbSectorsSphere;
+    const decimal stackStep = PI_RP3D / mNbStacksSphere;
+
+    for (uint32 i = 0; i <= mNbStacksSphere; i++) {
 
         const decimal stackAngle = PI_RP3D / 2 - i * stackStep;
 		const decimal radiusCosStackAngle = radius * std::cos(stackAngle);
 		const decimal z = radius * std::sin(stackAngle);
 
-        for (uint32 j = 0; j <= NB_SECTORS_SPHERE; j++) {
-		
+        for (uint32 j = 0; j <= mNbSectorsSphere; j++) {
+
 			const decimal sectorAngle = j * sectorStep;
 			const decimal x = radiusCosStackAngle * std::cos(sectorAngle);
 			const decimal y = radiusCosStackAngle * std::sin(sectorAngle);
 
-            vertices[i * (NB_SECTORS_SPHERE + 1) + j] = position + Vector3(x, y, z);
+            vertices[i * (mNbSectorsSphere + 1) + j] = position + Vector3(x, y, z);
 		}
 	}
 
 	// Faces
-    for (uint32 i = 0; i < NB_STACKS_SPHERE; i++) {
+    for (uint32 i = 0; i < mNbStacksSphere; i++) {
 
-        uint32 a1 = i * (NB_SECTORS_SPHERE + 1);
-        uint32 a2 = a1 + NB_SECTORS_SPHERE + 1;
+        uint32 a1 = i * (mNbSectorsSphere + 1);
+        uint32 a2 = a1 + mNbSectorsSphere + 1;
 
-        for (uint32 j = 0; j < NB_SECTORS_SPHERE; j++, a1++, a2++) {
-		
+        for (uint32 j = 0; j < mNbSectorsSphere; j++, a1++, a2++) {
+
 			// 2 triangles per sector except for the first and last stacks
 
 			if (i != 0) {
@@ -158,8 +159,8 @@ void DebugRenderer::drawSphere(const Vector3& position, decimal radius, uint32 c
 				mTriangles.add(DebugTriangle(vertices[a1], vertices[a2], vertices[a1 + 1], color));
 			}
 
-			if (i != (NB_STACKS_SPHERE - 1)) {
-				
+			if (i != (mNbStacksSphere - 1)) {
+
 				mTriangles.add(DebugTriangle(vertices[a1 + 1], vertices[a2], vertices[a2 + 1], color));
 			}
 		}
@@ -169,16 +170,16 @@ void DebugRenderer::drawSphere(const Vector3& position, decimal radius, uint32 c
 // Draw a capsule
 void DebugRenderer::drawCapsule(const Transform& transform, decimal radius, decimal height, uint32 color) {
 
-    Vector3 vertices[(NB_SECTORS_SPHERE + 1) * (NB_STACKS_SPHERE + 1) + (NB_SECTORS_SPHERE + 1)];
+    Vector3 vertices[(mNbSectorsSphere + 1) * (mNbStacksSphere + 1) + (mNbSectorsSphere + 1)];
 
     const decimal halfHeight = decimal(0.5) * height;
 
 	// Use an even number of stacks
-    const uint32 nbStacks = NB_STACKS_SPHERE % 2 == 0 ? NB_STACKS_SPHERE : NB_STACKS_SPHERE - 1;
+    const uint32 nbStacks = mNbStacksSphere % 2 == 0 ? mNbStacksSphere : mNbStacksSphere - 1;
     const uint32 nbHalfStacks = nbStacks / 2;
 	
 	// Vertices
-    const decimal sectorStep = 2 * PI_RP3D / NB_SECTORS_SPHERE;
+    const decimal sectorStep = 2 * PI_RP3D / mNbSectorsSphere;
     const decimal stackStep = PI_RP3D / nbStacks;
 	
     uint32 vertexIndex = 0;
@@ -190,13 +191,13 @@ void DebugRenderer::drawCapsule(const Transform& transform, decimal radius, deci
 		const decimal radiusCosStackAngle = radius * std::cos(stackAngle);
         const decimal y = radius * std::sin(stackAngle);
 
-        for (uint32 j = 0; j <= NB_SECTORS_SPHERE; j++) {
-		
+        for (uint32 j = 0; j <= mNbSectorsSphere; j++) {
+
 			const decimal sectorAngle = j * sectorStep;
             const decimal x = radiusCosStackAngle * std::sin(sectorAngle);
             const decimal z = radiusCosStackAngle * std::cos(sectorAngle);
 
-            assert(vertexIndex < (NB_SECTORS_SPHERE + 1) * (nbStacks + 1) + (NB_SECTORS_SPHERE + 1));
+            assert(vertexIndex < (mNbSectorsSphere + 1) * (nbStacks + 1) + (mNbSectorsSphere + 1));
 			vertices[vertexIndex] = transform * Vector3(x, y + halfHeight, z);
 
 			vertexIndex++;
@@ -210,13 +211,13 @@ void DebugRenderer::drawCapsule(const Transform& transform, decimal radius, deci
 		const decimal radiusCosStackAngle = radius * std::cos(stackAngle);
         const decimal y = radius * std::sin(stackAngle);
 
-        for (uint32 j = 0; j <= NB_SECTORS_SPHERE; j++) {
-		
+        for (uint32 j = 0; j <= mNbSectorsSphere; j++) {
+
 			const decimal sectorAngle = j * sectorStep;
             const decimal x = radiusCosStackAngle * std::sin(sectorAngle);
             const decimal z = radiusCosStackAngle * std::cos(sectorAngle);
 
-            assert(vertexIndex < (NB_SECTORS_SPHERE + 1) * (nbStacks + 1) + (NB_SECTORS_SPHERE + 1));
+            assert(vertexIndex < (mNbSectorsSphere + 1) * (nbStacks + 1) + (mNbSectorsSphere + 1));
             vertices[vertexIndex] = transform * Vector3(x, y - halfHeight, z);
 
 			vertexIndex++;
@@ -226,11 +227,11 @@ void DebugRenderer::drawCapsule(const Transform& transform, decimal radius, deci
 	// Faces of the top cap sphere
     for (uint32 i = 0; i < nbHalfStacks; i++) {
 
-        uint32 a1 = i * (NB_SECTORS_SPHERE + 1);
-        uint32 a2 = a1 + NB_SECTORS_SPHERE + 1;
+        uint32 a1 = i * (mNbSectorsSphere + 1);
+        uint32 a2 = a1 + mNbSectorsSphere + 1;
 
-        for (uint32 j = 0; j < NB_SECTORS_SPHERE; j++, a1++, a2++) {
-		
+        for (uint32 j = 0; j < mNbSectorsSphere; j++, a1++, a2++) {
+
 			// 2 triangles per sector except for the first stack
 
             if (i != 0) {
@@ -245,11 +246,11 @@ void DebugRenderer::drawCapsule(const Transform& transform, decimal radius, deci
 	// Faces of the bottom cap sphere
     for (uint32 i = 0; i < nbHalfStacks; i++) {
 
-        uint32 a1 = (nbHalfStacks + 1) * (NB_SECTORS_SPHERE + 1) + i * (NB_SECTORS_SPHERE + 1);
-        uint32 a2 = a1 + NB_SECTORS_SPHERE + 1;
+        uint32 a1 = (nbHalfStacks + 1) * (mNbSectorsSphere + 1) + i * (mNbSectorsSphere + 1);
+        uint32 a2 = a1 + mNbSectorsSphere + 1;
 
-        for (uint32 j = 0; j < NB_SECTORS_SPHERE; j++, a1++, a2++) {
-		
+        for (uint32 j = 0; j < mNbSectorsSphere; j++, a1++, a2++) {
+
 			// 2 triangles per sector except for the last stack
 
             mTriangles.add(DebugTriangle(vertices[a1], vertices[a2], vertices[a1 + 1], color));
@@ -262,9 +263,9 @@ void DebugRenderer::drawCapsule(const Transform& transform, decimal radius, deci
 	}
 
 	// Faces of the cylinder between the two spheres
-    uint32 a1 = nbHalfStacks * (NB_SECTORS_SPHERE + 1);
-    uint32 a2 = a1 + NB_SECTORS_SPHERE + 1;
-    for (uint32 i = 0; i < NB_SECTORS_SPHERE; i++, a1++, a2++) {
+    uint32 a1 = nbHalfStacks * (mNbSectorsSphere + 1);
+    uint32 a2 = a1 + mNbSectorsSphere + 1;
+    for (uint32 i = 0; i < mNbSectorsSphere; i++, a1++, a2++) {
 
 		mTriangles.add(DebugTriangle(vertices[a1 + 1], vertices[a2], vertices[a2 + 1], color));
 		mTriangles.add(DebugTriangle(vertices[a1], vertices[a2], vertices[a1 + 1], color));
