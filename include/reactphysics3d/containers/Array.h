@@ -142,7 +142,7 @@ class Array {
                 }
                
                 /// Plus operator
-                Iterator operator+(const difference_type& n) {
+                Iterator operator+(const difference_type& n) const {
                     return Iterator(mBuffer, mCurrentIndex + n, mSize);
                 }
                
@@ -153,7 +153,7 @@ class Array {
                 }
                
                 /// Minus operator
-                Iterator operator-(const difference_type& n) {
+                Iterator operator-(const difference_type& n) const {
                     return Iterator(mBuffer, mCurrentIndex - n, mSize);
                 }
                 
