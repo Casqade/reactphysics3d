@@ -271,9 +271,22 @@ if(RP3D_DOUBLE_PRECISION_ENABLED)
     target_compile_definitions(reactphysics3d PUBLIC IS_RP3D_DOUBLE_PRECISION_ENABLED)
 endif()
 
+if (${BUILD_SHARED_LIBS})
+ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+   target_compile_definitions(reactphysics3d PRIVATE "RP3D_EXPORT=__declspec(dllexport)")
+   target_compile_definitions(reactphysics3d INTERFACE "RP3D_EXPORT=__declspec(dllimport)")
+ endif()
+endif()
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+  set_target_properties(reactphysics3d PROPERTIES
+    WINDOWS_EXPORT_ALL_SYMBOLS TRUE
+  )
+endif()
+
 # Version number and soname for the library
 set_target_properties(reactphysics3d  PROPERTIES
-          VERSION "0.9.0" 
+          VERSION "0.9.0"
           SOVERSION "0.9"
 )
 

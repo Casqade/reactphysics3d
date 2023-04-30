@@ -47,7 +47,7 @@ namespace reactphysics3d {
  * Then this class is used by the user as a factory to create the physics world and
  * other objects.
  */
-class PhysicsCommon {
+class RP3D_EXPORT PhysicsCommon {
 
     private :
 

@@ -55,6 +55,10 @@
     #define RP3D_FORCE_INLINE inline
 #endif
 
+#if !defined(RP3D_EXPORT)
+  #define RP3D_EXPORT
+#endif
+
 /// Namespace reactphysics3d
 namespace reactphysics3d {
 
