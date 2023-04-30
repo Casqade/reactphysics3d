@@ -47,7 +47,7 @@ DebugRenderer::DebugRenderer(MemoryAllocator& allocator)
 
     mMapDebugItemWithColor.add(Pair<DebugItem, uint32>(DebugItem::COLLIDER_AABB, static_cast<uint32>(DebugColor::MAGENTA)));
     mMapDebugItemWithColor.add(Pair<DebugItem, uint32>(DebugItem::COLLIDER_BROADPHASE_AABB, static_cast<uint32>(DebugColor::YELLOW)));
-	mMapDebugItemWithColor.add(Pair<DebugItem, uint32>(DebugItem::COLLISION_SHAPE, static_cast<uint32>(DebugColor::GREEN)));
+  mMapDebugItemWithColor.add(Pair<DebugItem, uint32>(DebugItem::COLLISION_SHAPE, static_cast<uint32>(DebugColor::GREEN)));
     mMapDebugItemWithColor.add(Pair<DebugItem, uint32>(DebugItem::CONTACT_POINT, static_cast<uint32>(DebugColor::RED)));
     mMapDebugItemWithColor.add(Pair<DebugItem, uint32>(DebugItem::CONTACT_NORMAL, static_cast<uint32>(DebugColor::WHITE)));
 }
@@ -60,91 +60,92 @@ DebugRenderer::~DebugRenderer() {
 // Clear all the debugging primitives (points, lines, triangles, ...)
 void DebugRenderer::reset() {
 
-	mLines.clear();
-	mTriangles.clear();
+  mLines.clear();
+  mTriangles.clear();
 }
 
 // Draw an AABB
 void DebugRenderer::drawAABB(const AABB& aabb, uint32 color) {
-	
-	const Vector3& min = aabb.getMin();
-	const Vector3& max = aabb.getMax();
 
-	// Bottom edges
-	mLines.add(DebugLine(Vector3(min.x, min.y, max.z), Vector3(max.x, min.y, max.z), color));
-	mLines.add(DebugLine(Vector3(max.x, min.y, max.z),  Vector3(max.x, min.y, min.z), color));
-	mLines.add(DebugLine(Vector3(max.x, min.y, min.z), Vector3(min.x, min.y, min.z), color));
-	mLines.add(DebugLine(Vector3(min.x, min.y, min.z), Vector3(min.x, min.y, max.z), color));
+  const Vector3& min = aabb.getMin();
+  const Vector3& max = aabb.getMax();
 
-	// Top edges
-	mLines.add(DebugLine(Vector3(min.x, max.y, max.z), Vector3(max.x, max.y, max.z), color));
-	mLines.add(DebugLine(Vector3(max.x, max.y, max.z), Vector3(max.x, max.y, min.z), color));
-	mLines.add(DebugLine(Vector3(max.x, max.y, min.z), Vector3(min.x, max.y, min.z), color));
-	mLines.add(DebugLine(Vector3(min.x, max.y, min.z), Vector3(min.x, max.y, max.z), color));
+  // Bottom edges
+  mLines.add(DebugLine(Vector3(min.x, min.y, max.z), Vector3(max.x, min.y, max.z), color));
+  mLines.add(DebugLine(Vector3(max.x, min.y, max.z),  Vector3(max.x, min.y, min.z), color));
+  mLines.add(DebugLine(Vector3(max.x, min.y, min.z), Vector3(min.x, min.y, min.z), color));
+  mLines.add(DebugLine(Vector3(min.x, min.y, min.z), Vector3(min.x, min.y, max.z), color));
 
-	// Side edges
-	mLines.add(DebugLine(Vector3(min.x, min.y, max.z), Vector3(min.x, max.y, max.z), color));
-	mLines.add(DebugLine(Vector3(max.x, min.y, max.z), Vector3(max.x, max.y, max.z), color));
-	mLines.add(DebugLine(Vector3(max.x, min.y, min.z), Vector3(max.x, max.y, min.z), color));
-	mLines.add(DebugLine(Vector3(min.x, min.y, min.z), Vector3(min.x, max.y, min.z), color));
+  // Top edges
+  mLines.add(DebugLine(Vector3(min.x, max.y, max.z), Vector3(max.x, max.y, max.z), color));
+  mLines.add(DebugLine(Vector3(max.x, max.y, max.z), Vector3(max.x, max.y, min.z), color));
+  mLines.add(DebugLine(Vector3(max.x, max.y, min.z), Vector3(min.x, max.y, min.z), color));
+  mLines.add(DebugLine(Vector3(min.x, max.y, min.z), Vector3(min.x, max.y, max.z), color));
+
+  // Side edges
+  mLines.add(DebugLine(Vector3(min.x, min.y, max.z), Vector3(min.x, max.y, max.z), color));
+  mLines.add(DebugLine(Vector3(max.x, min.y, max.z), Vector3(max.x, max.y, max.z), color));
+  mLines.add(DebugLine(Vector3(max.x, min.y, min.z), Vector3(max.x, max.y, min.z), color));
+  mLines.add(DebugLine(Vector3(min.x, min.y, min.z), Vector3(min.x, max.y, min.z), color));
 }
 
 // Draw a box
 void DebugRenderer::drawBox(const Transform& transform, const Vector3& halfExtents, uint32 color) {
 
-	Vector3 vertices[8];
+  Vector3 vertices[8];
 
-	// Vertices
-	vertices[0] = transform * Vector3(-halfExtents.x, -halfExtents.y, halfExtents.z);
-	vertices[1] = transform * Vector3(halfExtents.x, -halfExtents.y, halfExtents.z);
-	vertices[2] = transform * Vector3(halfExtents.x, -halfExtents.y, -halfExtents.z);
-	vertices[3] = transform * Vector3(-halfExtents.x, -halfExtents.y, -halfExtents.z);
-	vertices[4] = transform * Vector3(-halfExtents.x, halfExtents.y, halfExtents.z);
-	vertices[5] = transform * Vector3(halfExtents.x, halfExtents.y, halfExtents.z);
-	vertices[6] = transform * Vector3(halfExtents.x, halfExtents.y, -halfExtents.z);
-	vertices[7] = transform * Vector3(-halfExtents.x, halfExtents.y, -halfExtents.z);
+  // Vertices
+  vertices[0] = transform * Vector3(-halfExtents.x, -halfExtents.y, halfExtents.z);
+  vertices[1] = transform * Vector3(halfExtents.x, -halfExtents.y, halfExtents.z);
+  vertices[2] = transform * Vector3(halfExtents.x, -halfExtents.y, -halfExtents.z);
+  vertices[3] = transform * Vector3(-halfExtents.x, -halfExtents.y, -halfExtents.z);
+  vertices[4] = transform * Vector3(-halfExtents.x, halfExtents.y, halfExtents.z);
+  vertices[5] = transform * Vector3(halfExtents.x, halfExtents.y, halfExtents.z);
+  vertices[6] = transform * Vector3(halfExtents.x, halfExtents.y, -halfExtents.z);
+  vertices[7] = transform * Vector3(-halfExtents.x, halfExtents.y, -halfExtents.z);
 
-	// Triangle faces
-	mTriangles.add(DebugTriangle(vertices[0], vertices[1], vertices[5], color));
-	mTriangles.add(DebugTriangle(vertices[0], vertices[5], vertices[4], color));
-	mTriangles.add(DebugTriangle(vertices[1], vertices[2], vertices[6], color));
-	mTriangles.add(DebugTriangle(vertices[1], vertices[6], vertices[5], color));
-	mTriangles.add(DebugTriangle(vertices[2], vertices[3], vertices[6], color));
-	mTriangles.add(DebugTriangle(vertices[3], vertices[7], vertices[6], color));
-	mTriangles.add(DebugTriangle(vertices[0], vertices[7], vertices[3], color));
-	mTriangles.add(DebugTriangle(vertices[0], vertices[4], vertices[7], color));
-	mTriangles.add(DebugTriangle(vertices[0], vertices[2], vertices[1], color));
-	mTriangles.add(DebugTriangle(vertices[0], vertices[3], vertices[2], color));
-	mTriangles.add(DebugTriangle(vertices[5], vertices[6], vertices[4], color));
-	mTriangles.add(DebugTriangle(vertices[4], vertices[6], vertices[7], color));
+  // Triangle faces
+  mTriangles.add(DebugTriangle(vertices[0], vertices[1], vertices[5], color));
+  mTriangles.add(DebugTriangle(vertices[0], vertices[5], vertices[4], color));
+  mTriangles.add(DebugTriangle(vertices[1], vertices[2], vertices[6], color));
+  mTriangles.add(DebugTriangle(vertices[1], vertices[6], vertices[5], color));
+  mTriangles.add(DebugTriangle(vertices[2], vertices[3], vertices[6], color));
+  mTriangles.add(DebugTriangle(vertices[3], vertices[7], vertices[6], color));
+  mTriangles.add(DebugTriangle(vertices[0], vertices[7], vertices[3], color));
+  mTriangles.add(DebugTriangle(vertices[0], vertices[4], vertices[7], color));
+  mTriangles.add(DebugTriangle(vertices[0], vertices[2], vertices[1], color));
+  mTriangles.add(DebugTriangle(vertices[0], vertices[3], vertices[2], color));
+  mTriangles.add(DebugTriangle(vertices[5], vertices[6], vertices[4], color));
+  mTriangles.add(DebugTriangle(vertices[4], vertices[6], vertices[7], color));
 }
 
 /// Draw a sphere
 void DebugRenderer::drawSphere(const Vector3& position, decimal radius, uint32 color) {
 
-    Vector3 vertices[(mNbSectorsSphere + 1) * (mNbStacksSphere + 1) + (mNbSectorsSphere + 1)];
+    Array <Vector3> vertices {mAllocator};
+    vertices.addWithoutInit((mNbSectorsSphere + 1) * (mNbStacksSphere + 1) + (mNbSectorsSphere + 1));
 
-	// Vertices
+  // Vertices
     const decimal sectorStep = 2 * PI_RP3D / mNbSectorsSphere;
     const decimal stackStep = PI_RP3D / mNbStacksSphere;
 
     for (uint32 i = 0; i <= mNbStacksSphere; i++) {
 
         const decimal stackAngle = PI_RP3D / 2 - i * stackStep;
-		const decimal radiusCosStackAngle = radius * std::cos(stackAngle);
-		const decimal z = radius * std::sin(stackAngle);
+    const decimal radiusCosStackAngle = radius * std::cos(stackAngle);
+    const decimal z = radius * std::sin(stackAngle);
 
         for (uint32 j = 0; j <= mNbSectorsSphere; j++) {
 
-			const decimal sectorAngle = j * sectorStep;
-			const decimal x = radiusCosStackAngle * std::cos(sectorAngle);
-			const decimal y = radiusCosStackAngle * std::sin(sectorAngle);
+      const decimal sectorAngle = j * sectorStep;
+      const decimal x = radiusCosStackAngle * std::cos(sectorAngle);
+      const decimal y = radiusCosStackAngle * std::sin(sectorAngle);
 
             vertices[i * (mNbSectorsSphere + 1) + j] = position + Vector3(x, y, z);
-		}
-	}
+    }
+  }
 
-	// Faces
+  // Faces
     for (uint32 i = 0; i < mNbStacksSphere; i++) {
 
         uint32 a1 = i * (mNbSectorsSphere + 1);
@@ -152,79 +153,80 @@ void DebugRenderer::drawSphere(const Vector3& position, decimal radius, uint32 c
 
         for (uint32 j = 0; j < mNbSectorsSphere; j++, a1++, a2++) {
 
-			// 2 triangles per sector except for the first and last stacks
+      // 2 triangles per sector except for the first and last stacks
 
-			if (i != 0) {
-			
-				mTriangles.add(DebugTriangle(vertices[a1], vertices[a2], vertices[a1 + 1], color));
-			}
+      if (i != 0) {
 
-			if (i != (mNbStacksSphere - 1)) {
+        mTriangles.add(DebugTriangle(vertices[a1], vertices[a2], vertices[a1 + 1], color));
+      }
 
-				mTriangles.add(DebugTriangle(vertices[a1 + 1], vertices[a2], vertices[a2 + 1], color));
-			}
-		}
-	}
+      if (i != (mNbStacksSphere - 1)) {
+
+        mTriangles.add(DebugTriangle(vertices[a1 + 1], vertices[a2], vertices[a2 + 1], color));
+      }
+    }
+  }
 }
 
 // Draw a capsule
 void DebugRenderer::drawCapsule(const Transform& transform, decimal radius, decimal height, uint32 color) {
 
-    Vector3 vertices[(mNbSectorsSphere + 1) * (mNbStacksSphere + 1) + (mNbSectorsSphere + 1)];
+    Array <Vector3> vertices {mAllocator};
+    vertices.addWithoutInit((mNbSectorsSphere + 1) * (mNbStacksSphere + 1) + (mNbSectorsSphere + 1));
 
     const decimal halfHeight = decimal(0.5) * height;
 
-	// Use an even number of stacks
+  // Use an even number of stacks
     const uint32 nbStacks = mNbStacksSphere % 2 == 0 ? mNbStacksSphere : mNbStacksSphere - 1;
     const uint32 nbHalfStacks = nbStacks / 2;
-	
-	// Vertices
+
+  // Vertices
     const decimal sectorStep = 2 * PI_RP3D / mNbSectorsSphere;
     const decimal stackStep = PI_RP3D / nbStacks;
-	
+
     uint32 vertexIndex = 0;
-	
-	// Top cap sphere vertices
+
+  // Top cap sphere vertices
     for (uint32 i = 0; i <= nbHalfStacks; i++) {
 
         const decimal stackAngle = PI_RP3D / 2 - i * stackStep;
-		const decimal radiusCosStackAngle = radius * std::cos(stackAngle);
+    const decimal radiusCosStackAngle = radius * std::cos(stackAngle);
         const decimal y = radius * std::sin(stackAngle);
 
         for (uint32 j = 0; j <= mNbSectorsSphere; j++) {
 
-			const decimal sectorAngle = j * sectorStep;
+      const decimal sectorAngle = j * sectorStep;
             const decimal x = radiusCosStackAngle * std::sin(sectorAngle);
             const decimal z = radiusCosStackAngle * std::cos(sectorAngle);
 
             assert(vertexIndex < (mNbSectorsSphere + 1) * (nbStacks + 1) + (mNbSectorsSphere + 1));
-			vertices[vertexIndex] = transform * Vector3(x, y + halfHeight, z);
+      vertices[vertexIndex] = transform * Vector3(x, y + halfHeight, z);
 
-			vertexIndex++;
-		}
-	}
+      vertexIndex++;
+    }
+  }
 
-	// Bottom cap sphere vertices
+  // Bottom cap sphere vertices
     for (uint32 i = 0; i <= nbHalfStacks; i++) {
 
         const decimal stackAngle = PI_RP3D / 2 - (nbHalfStacks + i) * stackStep;
-		const decimal radiusCosStackAngle = radius * std::cos(stackAngle);
+    const decimal radiusCosStackAngle = radius * std::cos(stackAngle);
         const decimal y = radius * std::sin(stackAngle);
 
         for (uint32 j = 0; j <= mNbSectorsSphere; j++) {
 
-			const decimal sectorAngle = j * sectorStep;
+      const decimal sectorAngle = j * sectorStep;
             const decimal x = radiusCosStackAngle * std::sin(sectorAngle);
             const decimal z = radiusCosStackAngle * std::cos(sectorAngle);
 
             assert(vertexIndex < (mNbSectorsSphere + 1) * (nbStacks + 1) + (mNbSectorsSphere + 1));
             vertices[vertexIndex] = transform * Vector3(x, y - halfHeight, z);
 
-			vertexIndex++;
-		}
-	}
+      vertexIndex++;
+    }
+  }
 
-	// Faces of the top cap sphere
+  // Faces of the top cap sphere
     for (uint32 i = 0; i < nbHalfStacks; i++) {
 
         uint32 a1 = i * (mNbSectorsSphere + 1);
@@ -232,7 +234,7 @@ void DebugRenderer::drawCapsule(const Transform& transform, decimal radius, deci
 
         for (uint32 j = 0; j < mNbSectorsSphere; j++, a1++, a2++) {
 
-			// 2 triangles per sector except for the first stack
+      // 2 triangles per sector except for the first stack
 
             if (i != 0) {
 
@@ -241,9 +243,9 @@ void DebugRenderer::drawCapsule(const Transform& transform, decimal radius, deci
 
             mTriangles.add(DebugTriangle(vertices[a1 + 1], vertices[a2], vertices[a2 + 1], color));
         }
-	}
+  }
 
-	// Faces of the bottom cap sphere
+  // Faces of the bottom cap sphere
     for (uint32 i = 0; i < nbHalfStacks; i++) {
 
         uint32 a1 = (nbHalfStacks + 1) * (mNbSectorsSphere + 1) + i * (mNbSectorsSphere + 1);
@@ -251,7 +253,7 @@ void DebugRenderer::drawCapsule(const Transform& transform, decimal radius, deci
 
         for (uint32 j = 0; j < mNbSectorsSphere; j++, a1++, a2++) {
 
-			// 2 triangles per sector except for the last stack
+      // 2 triangles per sector except for the last stack
 
             mTriangles.add(DebugTriangle(vertices[a1], vertices[a2], vertices[a1 + 1], color));
 
@@ -260,28 +262,28 @@ void DebugRenderer::drawCapsule(const Transform& transform, decimal radius, deci
                 mTriangles.add(DebugTriangle(vertices[a1 + 1], vertices[a2], vertices[a2 + 1], color));
             }
         }
-	}
+  }
 
-	// Faces of the cylinder between the two spheres
+  // Faces of the cylinder between the two spheres
     uint32 a1 = nbHalfStacks * (mNbSectorsSphere + 1);
     uint32 a2 = a1 + mNbSectorsSphere + 1;
     for (uint32 i = 0; i < mNbSectorsSphere; i++, a1++, a2++) {
 
-		mTriangles.add(DebugTriangle(vertices[a1 + 1], vertices[a2], vertices[a2 + 1], color));
-		mTriangles.add(DebugTriangle(vertices[a1], vertices[a2], vertices[a1 + 1], color));
-	}
+    mTriangles.add(DebugTriangle(vertices[a1 + 1], vertices[a2], vertices[a2 + 1], color));
+    mTriangles.add(DebugTriangle(vertices[a1], vertices[a2], vertices[a1 + 1], color));
+  }
 }
 
 // Draw a convex mesh
 void DebugRenderer::drawConvexMesh(const Transform& transform, const ConvexMeshShape* convexMesh, uint32 color) {
 
-	// For each face of the convex mesh
-	for (uint32 f = 0; f < convexMesh->getNbFaces(); f++) {
+  // For each face of the convex mesh
+  for (uint32 f = 0; f < convexMesh->getNbFaces(); f++) {
 
-		const HalfEdgeStructure::Face& face = convexMesh->getFace(f);
-		assert(face.faceVertices.size() >= 3);
+    const HalfEdgeStructure::Face& face = convexMesh->getFace(f);
+    assert(face.faceVertices.size() >= 3);
 
-		// Perform a fan triangulation of the convex polygon face
+    // Perform a fan triangulation of the convex polygon face
         const uint32 nbFaceVertices = static_cast<uint32>(face.faceVertices.size());
         for (uint32 v = 2; v < nbFaceVertices; v++) {
 
@@ -298,29 +300,29 @@ void DebugRenderer::drawConvexMesh(const Transform& transform, const ConvexMeshS
             v3 = transform * v3;
 
             mTriangles.add(DebugTriangle(v1, v2, v3, color));
-		}
-	}
+    }
+  }
 }
 
 // Draw a concave mesh shape
 void DebugRenderer::drawConcaveMeshShape(const Transform& transform, const ConcaveMeshShape* concaveMeshShape, uint32 color) {
 
-	// For each sub-part of the mesh
+  // For each sub-part of the mesh
     for (uint32 p = 0; p < concaveMeshShape->getNbSubparts(); p++) {
 
-		// For each triangle of the sub-part
+    // For each triangle of the sub-part
         for (uint32 t = 0; t < concaveMeshShape->getNbTriangles(p); t++) {
-			
-			Vector3 triangleVertices[3];
-			concaveMeshShape->getTriangleVertices(p, t, triangleVertices);
+
+      Vector3 triangleVertices[3];
+      concaveMeshShape->getTriangleVertices(p, t, triangleVertices);
 
             triangleVertices[0] = transform * triangleVertices[0];
             triangleVertices[1] = transform * triangleVertices[1];
             triangleVertices[2] = transform * triangleVertices[2];
 
             mTriangles.add(DebugTriangle(triangleVertices[0], triangleVertices[1], triangleVertices[2], color));
-		}
-	}
+    }
+  }
 }
 
 // Draw a height field shape
@@ -342,16 +344,16 @@ void DebugRenderer::drawHeightFieldShape(const Transform& transform, const Heigh
             p4 = transform * p4;
 
             mTriangles.add(DebugTriangle(p1, p2, p3, color));
-			mTriangles.add(DebugTriangle(p3, p2, p4, color));
+      mTriangles.add(DebugTriangle(p3, p2, p4, color));
        }
    }
 }
 
 // Draw the collision shape of a collider
 void DebugRenderer::drawCollisionShapeOfCollider(const Collider* collider, uint32 color) {
-	
+
     switch (collider->getCollisionShape()->getName()) {
-		
+
         case CollisionShapeName::BOX:
         {
             const BoxShape* boxShape = static_cast<const BoxShape*>(collider->getCollisionShape());
@@ -398,17 +400,17 @@ void DebugRenderer::drawCollisionShapeOfCollider(const Collider* collider, uint3
 // Generate the rendering primitives (triangles, lines, ...) of a physics world
 void DebugRenderer::computeDebugRenderingPrimitives(const PhysicsWorld& world) {
 
-	const bool drawColliderAABB = getIsDebugItemDisplayed(DebugItem::COLLIDER_AABB);
-	const bool drawColliderBroadphaseAABB = getIsDebugItemDisplayed(DebugItem::COLLIDER_BROADPHASE_AABB);
-	const bool drawCollisionShape = getIsDebugItemDisplayed(DebugItem::COLLISION_SHAPE);
-	
+  const bool drawColliderAABB = getIsDebugItemDisplayed(DebugItem::COLLIDER_AABB);
+  const bool drawColliderBroadphaseAABB = getIsDebugItemDisplayed(DebugItem::COLLIDER_BROADPHASE_AABB);
+  const bool drawCollisionShape = getIsDebugItemDisplayed(DebugItem::COLLISION_SHAPE);
+
     const uint32 nbCollisionBodies = world.getNbCollisionBodies();
     const uint32 nbRigidBodies = world.getNbRigidBodies();
 
     // For each body of the world
     for (uint32 b = 0; b < nbCollisionBodies + nbRigidBodies; b++) {
 
-		// Get a body
+    // Get a body
         const CollisionBody* body = b < nbCollisionBodies ? world.getCollisionBody(b) : world.getRigidBody(b - nbCollisionBodies);
 
         if (body->isActive()) {
@@ -446,13 +448,13 @@ void DebugRenderer::computeDebugRenderingPrimitives(const PhysicsWorld& world) {
 // Called when some contacts occur
 void DebugRenderer::onContact(const CollisionCallback::CallbackData& callbackData) {
 
-	// If we need to draw contact points
+  // If we need to draw contact points
     if (getIsDebugItemDisplayed(DebugItem::CONTACT_POINT) || getIsDebugItemDisplayed(DebugItem::CONTACT_NORMAL)) {
 
-		// For each contact pair
+    // For each contact pair
         for (uint32 p = 0; p < callbackData.getNbContactPairs(); p++) {
 
-			CollisionCallback::ContactPair contactPair = callbackData.getContactPair(p);
+      CollisionCallback::ContactPair contactPair = callbackData.getContactPair(p);
 
             if (contactPair.getEventType() != CollisionCallback::ContactPair::EventType::ContactExit) {
 
@@ -476,6 +478,6 @@ void DebugRenderer::onContact(const CollisionCallback::CallbackData& callbackDat
                     }
                 }
             }
-		}
-	}
+    }
+  }
 }
